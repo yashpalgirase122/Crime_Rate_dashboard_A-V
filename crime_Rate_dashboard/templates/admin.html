@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crime Rate Dashboard - Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            color: var(--text-primary);
+        }
+        .table th, .table td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .table th {
+            background: rgba(0,0,0,0.2);
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .table tr:hover { background: rgba(59, 130, 246, 0.05); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-logo">Crime Rate Dashboard</div>
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('chatbot') }}" class="nav-link">AI Chatbot</a>
+            <a href="{{ url_for('admin') }}" class="nav-link active" style="color:var(--warning)">Admin Panel</a>
+            <div style="margin-top:auto"></div>
+            <a href="{{ url_for('logout') }}" class="nav-link" style="color:var(--danger)">Logout</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Admin Control Panel</h1>
+            </div>
+
+            <div class="chart-container" style="margin-bottom:2rem;">
+                <div class="chart-header">Registered Users</div>
+                <table class="table">
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                    {% for u in users %}
+                    <tr>
+                        <td>{{ u.id }}</td>
+                        <td>{{ u.username }}</td>
+                        <td>{{ u.email }}</td>
+                        <td><span class="{{ 'warning-text' if u.role == 'admin' else '' }}">{{ u.role }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="chart-container">
+                    <div class="chart-header">Recent Crime Predictions</div>
+                    <table class="table">
+                        <tr>
+                            <th>City</th>
+                            <th>Crime Type</th>
+                            <th>Prediction</th>
+                            <th>Year</th>
+                        </tr>
+                        {% for p in predictions %}
+                        <tr>
+                            <td>{{ p.city }}</td>
+                            <td>{{ p.crime_type }}</td>
+                            <td class="warning-text">{{ p.predicted_count }}</td>
+                            <td>{{ p.prediction_year }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-header">System Alerts</div>
+                    <table class="table">
+                        <tr>
+                            <th>Message</th>
+                            <th>Severity</th>
+                        </tr>
+                        {% for a in alerts %}
+                        <tr>
+                            <td>{{ a.alert_message }}</td>
+                            <td><span class="{{ 'danger-text' if a.severity == 'HIGH' else 'warning-text' }}">{{ a.severity }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>
